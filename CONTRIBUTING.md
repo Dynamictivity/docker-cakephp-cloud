@@ -12,7 +12,7 @@ Please contribute to this repository if any of the following is true:
 
 The source code repository located on GitHub is simply an external sync from our
 GitLab server. If you would like to contribute, please create an account on our
-[GitLab server](http://gitlab.dynamictivity.com/cakephp/docker-cakephp) -- from
+[GitLab server](http://gitlab.dynamictivity.com/cakephp/docker-cakephp-cloud) -- from
 there you can fork the repository, report issues, create merge requests, etc.
 
 ## Types of contributions
@@ -67,7 +67,7 @@ behaviour is not welcome.
 
 # Communication
 
-There is a [Mattermost Team](http://mattermost.dynamictivity.com/signup_user_complete/?id=pjksr6h977n4zxxyto3ojp8twa) mattermost.dynamictivity.com, channel `#docker-cakephp`. You're
+There is a [Mattermost Team](https://mattermost.dynamictivity.com/signup_user_complete/?id=pjksr6h977n4zxxyto3ojp8twa) mattermost.dynamictivity.com, channel `#docker-cakephp`. You're
 welcome to drop in and ask questions, discuss bugs and such.
 
 GitLab issues are the primary way for communicating about specific proposed

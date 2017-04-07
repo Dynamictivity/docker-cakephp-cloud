@@ -97,17 +97,10 @@ ADD my_init/init-nginx.sh /etc/my_init.d/20-init-nginx.sh
 ADD my_init/init.sh /etc/my_init.d/30-init.sh
 
 # Setup private key
-#RUN mkdir /root/.ssh
 ADD config/id_rsa /
 RUN mv /id_rsa /root/.ssh/id_rsa
 RUN chmod 600 ~/.ssh/id_rsa
 RUN echo "    IdentityFile ~/.ssh/id_rsa" >> /etc/ssh/ssh_config
-
-# Setup nginx
-#ADD nginx.conf /etc/nginx/
-#ADD cakephp.conf /etc/nginx/conf.d/
-#RUN echo "upstream php-upstream { server php:9000; }" > /etc/nginx/conf.d/upstream.conf
-#RUN adduser -D -g '' -G www-data www-data
 
 ENV COMPOSER_HOME=/www
 

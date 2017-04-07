@@ -13,6 +13,7 @@ services:
             - "9000"
         volumes:
             - /www
+            - /mnt/docker/cakephp/logs:/www/logs
             - /mnt/docker/cakephp/tmp:/www/tmp
         links:
             - db
@@ -31,5 +32,6 @@ services:
           EMAIL_TLS: 'false'
           REPO: 'https://gitlab.dynamictivity.com/cakephp/cakephp-bookmarker.git'
           REPO_HOST: 'gitlab.dynamictivity.com'
+          SECURITY_SALT: '4F3mzqXRuQ4X9S9sR2d64YV2Ftcfd2KVek678m4K63q35g9z7YT8YwEu4s46A25Y'
         ports:
             - "80:80"

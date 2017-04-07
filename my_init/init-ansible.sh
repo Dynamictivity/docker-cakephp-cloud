@@ -11,7 +11,7 @@ if [ -n "$ANSIBLE_GALAXY_ROLES" ]; then
   done
 fi
 
-if [ -n "$ANSIBLE_GALAXY_ROLES" ]; then
+if [ -n "$ANSIBLE_PLAYBOOK_URL" ]; then
     # Download remote playbook
     cd /ansible && wget -O playbook.yml $ANSIBLE_PLAYBOOK_URL
 fi

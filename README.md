@@ -1,18 +1,42 @@
 docker-cakephp-prod
 ==============
-
 Just a little Docker POC in order to have a self-contained CakePHP application running in a Docker container using
 docker-compose or docker-cloud tools.
 
-## Docker Hub
+## How it works?
+The docker container contains all necessary libraries, php-processing and proxy tools to run a self-contained CakePHP
+application, minus the database.
 
+Here are the `docker-compose` built images:
+
+* `db`: This is the MySQL database container (can be changed to postgresql or whatever in `docker-compose.yml` file)
+* `cakephp`: This is the PHP-FPM container including the application volume mounted on
+
+This results in the following running containers:
+
+```bash
+> $ docker-compose ps
+        Name                    Command             State                   Ports                 
+  -----------------------------------------------------------------------------------------------
+  vagrant_cakephp_1   /sbin/my_init                 Up      443/tcp, 0.0.0.0:80->80/tcp, 9000/tcp 
+  vagrant_db_1        docker-entrypoint.sh mysqld   Up      0.0.0.0:3306->3306/tcp         
+```
+
+```bash
+> $ docker stats
+CONTAINER           CPU %               MEM USAGE / LIMIT       MEM %
+e231fff8c78b        0.01%               83.83 MiB / 488.7 MiB   17.16%      vagrant_cakephp_1
+1f59f3d11d14        0.06%               102.1 MiB / 488.7 MiB   20.89%      vagrant_db_1
+```
+
+## Docker Hub
 This image is available on [Docker Hub](https://hub.docker.com/r/travisrowland/docker-cakephp-cloud/)
 
 ## Recommendations
-
-It is recommended to utilize this stack with database sessions, so your sessions can be persisted across all running
-instances of your application. It is also recommended that you mount your `/tmp` and `uploads` directories as Docker
-volumes in order to share them across all running instances.
+- It is recommended to utilize this stack with database sessions, so your sessions can be persisted across all running
+    instances of your application.
+- It is also recommended that you mount your `/tmp`, 'logs' and `uploads` directories as Docker volumes in order to
+    share them across all running instances.
 
 ## Contributing
 Please see [Contributing](CONTRIBUTING.md) for instructions on contributing to this repository.
@@ -20,6 +44,7 @@ Please see [Contributing](CONTRIBUTING.md) for instructions on contributing to t
 ## Features
 - Ubuntu 16.04
 - PHP 7.0
+- Built-in NGINX proxy server
 - Ability to clone repository into docker container upon startup
 - Ansible built-in for extreme configuration management
 - Built on [baseimage-docker](https://github.com/phusion/baseimage-docker) for great flexibility
@@ -60,11 +85,9 @@ nano
 - Suggestions?
 
 # Usage
-
 There are multiple ways to use this container and I will describe the common, recommended ways, below.
 
-## Method 1 (preferred): Build your app inside the image
-
+### Method 1 (preferred): Build your app inside the image
 You can build your app into the container image by adding the following `Dockerfile` to your application source code
 repository.
 
@@ -72,8 +95,7 @@ repository.
 
 ```
 
-## Method 2: Auto-clone your app to the container
-
+### Method 2: Auto-clone your app to the container
 First, clone this repository:
 
 ```bash
@@ -82,7 +104,7 @@ $ git clone git@github.com:Dynamictivity/docker-cakephp-cloud.git
 
 Next, edit the `docker-compose.yml` file and change the `REPO:` value to the URL of your application's GIT repository.
 
-Finally (required only for SSH GIT repositories), edit `php-fpm/id_rsa` file and put your GIT deployment (private key)
+Finally (required only for SSH GIT repositories), edit `config/id_rsa` file and put your GIT deployment (private key)
 in there so that the docker container can access your private GIT repository. If you are using GIT via SSH you'll also
 want to change the `REPO_HOST:` value to the FQDN of your GIT server host, that way the host key can be automatically
 accepted.
@@ -103,8 +125,7 @@ $ docker-compose build
 
 # Custom Application Configuration
 
-## Database Migrations and Seeds
-
+### Database Migrations and Seeds
 When the container spins up it runs the following 2 commands (aside from `composer install`):
 
 ```bash
@@ -114,7 +135,7 @@ $ cd /www; bin/cake migrations seed --seed $DB_SEED
 
 You can specify the database seed file inside of `docker-compose.yml` by changing the `DB_SEED:` value to that of your database seed file.
 
-## E-Mail Configuration
+### E-Mail Configuration
 Change the following variables in `docker-compose.yml` to configure email in your application:
 
 ```
@@ -124,6 +145,28 @@ EMAIL_TIMEOUT: '30'
 EMAIL_USERNAME: 'user'
 EMAIL_PASSWORD: 'secret'
 EMAIL_TLS:
+```
+
+### Security Salt
+Be sure to update the `SECURITY_SALT` value in the `docker-compose.yml`.
+
+```
+environment:
+  DEBUG: 'true'
+  DB_HOST: 'db' # Leave this as 'db' to utilize MySQL container(s)
+  DB_USERNAME: 'root'
+  DB_PASSWORD: 'cakephp'
+  DB_DATABASE: 'cakephp'
+  DB_SEED: 'DatabaseSeed'
+  EMAIL_HOST: 'localhost'
+  EMAIL_PORT: '25'
+  EMAIL_TIMEOUT: '30'
+  EMAIL_USERNAME: 'user'
+  EMAIL_PASSWORD: 'secret'
+  EMAIL_TLS: 'false'
+  REPO: 'https://gitlab.dynamictivity.com/cakephp/cakephp-bookmarker.git'
+  REPO_HOST: 'gitlab.dynamictivity.com'
+  SECURITY_SALT: '4F3mzqXRuQ4X9S9sR2d64YV2Ftcfd2KVek678m4K63q35g9z7YT8YwEu4s46A25Y'
 ```
 
 # Vagrant
@@ -136,49 +179,32 @@ $ cd /vagrant
 $ docker-compose up
 ```
 
-# How it works?
+## Read logs
+You can access Nginx and CakePHP application logs in the following directories on your host machine, provided you use
+the recommended docker-compose configuration:
 
-Here are the `docker-compose` built images:
+* `/mnt/docker/cakephp/logs`
 
-* `db`: This is the MySQL database container (can be changed to postgresql or whatever in `docker-compose.yml` file)
-* `nginx`: This is the Nginx webserver container in which php volumes are mounted to
-* `php`: This is the PHP-FPM container including the application volume mounted on
+# Ansible
+Ansible is used inside the docker image to configure NGINX. You may find our custom configuration in
+[ansible/playbook.yml](ansible/playbook.yml)). This is based on another open-source project from Dynamictivity called
+[anginx-ansible](https://gitlab.dynamictivity.com/ansible/nginx-ansible).
 
-This results in the following running containers:
+This docker container has the ability to pull in a playbook specification from a remote URL and automatically run that
+playbook on container startup. Primarily this is used to configure the in-build nginx server which is running in this
+container, however that doesn't stop you from configuring Ansible in this container to perform any number of additional
+tasks.
 
-```bash
-> $ docker-compose ps
-        Name                      Command               State              Ports
-        -------------------------------------------------------------------------------------------
-        docker_db_1            /entrypoint.sh mysqld            Up      0.0.0.0:3306->3306/tcp
-        docker_nginx_1         nginx                            Up      443/tcp, 0.0.0.0:80->80/tcp
-        docker_php_1           php5-fpm -F                      Up      9000/tcp
-```
+### Configuring Ansible Playbooks
 
-# Read logs
+### Pull in Remote Playbook
+Simply pass in the environment variable `ANSIBLE_PLAYBOOK_URL` with the url of your remote playbook.
 
-You can access Nginx and CakePHP application logs in the following directories on your host machine:
+### Pull in Ansible Galaxy Roles
+Pass in the environment variable `ANSIBLE_GALAXY_ROLES` as a comma-separated list of roles. The container will
+automatically download them on start-up.
 
-* `logs/nginx`
-* `logs/cakephp`
-
-# Code license
-
-You are free to use the code in this repository under the terms of the 0-clause BSD license. LICENSE contains a copy of this license.
-
-# nginx-ansible
-This is our docker image for configuring and running nginx as a reverse proxy. You may find our custom configuration in [ansible/nginx.yml](ansible/nginx.yml)). To use this for your own purposes, you will simply have to fork this repo and change the configuration in the `nginx.yml` playbook.
-
-This docker container has the ability to pull in a playbook specification from a remote URL and automatically run that playbook on container startup. Primarily this is used to configure the in-build nginx server which is running in this container, however that doesn't stop you from configuring Ansible in this container to perform any number of additional tasks.
-
-Original Ansible role: [https://github.com/jdauphant/ansible-role-nginx](https://github.com/jdauphant/ansible-role-nginx)
-
-## Contributing
-Please see [Contributing](CONTRIBUTING.md) for instructions on contributing to this repository.
-
-## Configuring Ansible Playbooks
-
-### Example docker-compose.yml
+#### Example docker-compose.yml
 ```
 version: '2'
 services:
@@ -194,9 +220,8 @@ services:
 
 Role Variables
 --------------
-
 The variables that can be passed to this role and a brief description about
-them are as follows. (For all variables, take a look at [defaults/main.yml](defaults/main.yml))
+them are as follows. (For all variables, take a look at [ansible/roles/nginx/defaults/main.yml](ansible/roles/nginx/defaults/main.yml))
 
 ```yaml
 # The user to run nginx
@@ -261,16 +286,14 @@ nginx_auth_basic_files:
 
 Examples
 ========
-
 1) Install nginx with HTTP directives of choice, but with no sites
 configured and no additionnal configuration:
 
 ```yaml
 - hosts: all
   roles:
-  - {role: nginx,
-     nginx_http_params: ["sendfile on", "access_log /var/log/nginx/access.log"]
-                          }
+  - role: nginx,
+    nginx_http_params: ["sendfile on", "access_log /var/log/nginx/access.log"]
 ```
 
 2) Install nginx with different HTTP directives than in the previous example, but no
@@ -279,8 +302,8 @@ sites configured and no additional configuration.
 ```yaml
 - hosts: all
   roles:
-  - {role: nginx,
-     nginx_http_params: ["tcp_nodelay on", "error_log /var/log/nginx/error.log"]}
+  - role: nginx,
+    nginx_http_params: ["tcp_nodelay on", "error_log /var/log/nginx/error.log"]
 ```
 
 Note: Please make sure the HTTP directives passed are valid, as this role
@@ -331,7 +354,6 @@ Additional configurations are created in /etc/nginx/conf.d/
 5) Install Nginx, add 2 sites (different method) and add additional configuration
 
 ```yaml
----
 - hosts: all
   roles:
     - role: nginx
@@ -360,7 +382,6 @@ Additional configurations are created in /etc/nginx/conf.d/
 6) Install Nginx, add 2 sites, add additional configuration and an upstream configuration block
 
 ```yaml
----
 - hosts: all
   roles:
     - role: nginx
@@ -405,7 +426,6 @@ Additional configurations are created in /etc/nginx/conf.d/
 7) Install Nginx, add a site and use special yaml syntax to make the location blocks multiline for clarity
 
 ```yaml
----
 - hosts: all
   roles:
     - role: nginx
@@ -485,16 +505,12 @@ If you use this option:
 If you use this method, the conf file formatting provided by this role is unavailable,
 and it is up to you to provide a template with valid content and formatting for NGINX._
 
-# TODO
-- Ability to load remote Ansible hosts file
-- Ability to load remote Ansible configuration
-
 # Support
 support@dynamictivity.com
 
 License
 -------
-MIT
+You are free to use the code in this repository under the terms of the MIT license. LICENSE contains a copy of this license.
 
 Author Information
 ------------------

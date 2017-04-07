@@ -8,6 +8,9 @@ if [ -n "$REPO" ] ; then
     ssh-keyscan -H $REPO_HOST >> ~/.ssh/known_hosts
     git clone $REPO /source
     cd /source && git pull origin master
+fi
+
+if [ -d "/source" ]; then
     rsync -vaz /source/* /www
 fi
 
@@ -46,4 +49,3 @@ chmod 777 /www/logs
 
 # Start php-fpm
 nohup /usr/sbin/php-fpm7.0 &
-#service php7.0-fpm start
