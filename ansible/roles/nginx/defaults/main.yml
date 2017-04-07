@@ -28,15 +28,24 @@ nginx_stream_params: []
 
 nginx_sites:
   default:
-     - listen 80 default_server
-     - server_name _
-     - root "{% if ansible_os_family == 'FreeBSD' %}/usr/local/www/nginx-dist{% else %}/usr/share/nginx/html{% endif %}"
-     - index index.html
+   - listen 80 default_server
+   - server_name _
+   - root "{% if ansible_os_family == 'FreeBSD' %}/usr/local/www/nginx-dist{% else %}/usr/share/nginx/html{% endif %}"
+   - index index.html
 nginx_remove_sites: []
 
 nginx_configs:
   upstream:
-      - upstream php-upstream { server localhost:9000; }
+    - upstream php-upstream { server localhost:9000; }
+  gzip:
+    - gzip on
+    - gzip_disable msie6
+    - gzip_vary on
+    - gzip_proxied any
+    - gzip_comp_level 6
+    - gzip_buffers 16 8k
+    - gzip_http_version 1.1
+    - gzip_types text/plain text/css application/javascript application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript
 
 nginx_stream_configs: {}
 nginx_remove_configs: []
