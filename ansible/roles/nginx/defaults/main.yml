@@ -38,8 +38,6 @@ nginx_configs:
   upstream:
     - upstream php-upstream { server localhost:9000; }
   gzip:
-    - gzip on
-    - gzip_disable msie6
     - gzip_vary on
     - gzip_proxied any
     - gzip_comp_level 6
