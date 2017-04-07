@@ -1,13 +1,14 @@
 docker-cakephp-prod
 ==============
 Just a little Docker POC in order to have a self-contained CakePHP application running in a Docker container using
-docker-compose or docker-cloud tools.
+docker-compose or docker-cloud tools in a production environment. This image is ready to be scaled out horizonally
+on a docker swarm cluster, kubernetes, mesos, etc.
 
 ## How it works?
 The docker container contains all necessary libraries, php-processing and proxy tools to run a self-contained CakePHP
 application, minus the database.
 
-Here are the `docker-compose` built images:
+Here are the default `docker-compose` images:
 
 * `db`: This is the MySQL database container (can be changed to postgresql or whatever in `docker-compose.yml` file)
 * `cakephp`: This is the PHP-FPM container including the application volume mounted on
@@ -18,7 +19,7 @@ This results in the following running containers:
 > $ docker-compose ps
         Name                    Command             State                   Ports                 
   -----------------------------------------------------------------------------------------------
-  vagrant_cakephp_1   /sbin/my_init                 Up      443/tcp, 0.0.0.0:80->80/tcp, 9000/tcp 
+  vagrant_cakephp_1   /sbin/my_init                 Up      443/tcp, 0.0.0.0:80->80/tcp, 9000/tcp
   vagrant_db_1        docker-entrypoint.sh mysqld   Up      0.0.0.0:3306->3306/tcp         
 ```
 
@@ -44,10 +45,12 @@ Please see [Contributing](CONTRIBUTING.md) for instructions on contributing to t
 ## Features
 - Ubuntu 16.04
 - PHP 7.0
-- Built-in NGINX proxy server
+- Built-in `NGINX` proxy server
 - Ability to clone repository into docker container upon startup
-- Ansible built-in for extreme configuration management
+- `Ansible` built-in for extreme configuration management
+  - Anything you can do with `Ansible`, can be done in containers built using this image
 - Built on [baseimage-docker](https://github.com/phusion/baseimage-docker) for great flexibility
+  - All features and functionality from `baseimage-docker` are available in this image
 
 ## Installed Packages
 ```
@@ -81,17 +84,25 @@ nano
 ```
 
 ## Todo
-- Get database sessions working (currently it always creates the `data` field of the `sessions` table as `binary(255)` no-matter what)
+- Get database sessions working (currently it always creates the `data` field of the `sessions` table as `binary(255)`
+    no-matter what)
 - Suggestions?
 
 # Usage
 There are multiple ways to use this container and I will describe the common, recommended ways, below.
 
 ### Method 1 (preferred): Build your app inside the image
-You can build your app into the container image by adding the following `Dockerfile` to your application source code
-repository.
+You can build your app into the container image by adding a `Dockerfile` similar to the following to your application
+source code repository.
 
 ```
+FROM travisrowland/docker-cakephp-cloud:latest
+
+# Add source code
+ADD . /source
+
+# Add custom init scropts
+#ADD app-init.sh /etc/my_init.d/app-init.sh
 
 ```
 
