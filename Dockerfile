@@ -88,6 +88,11 @@ EXPOSE 443
 # Setup app configuration
 ADD config/app.php /
 
+# Setup nginx-proxy
+# https://github.com/jwilder/docker-gen
+# https://github.com/jwilder/nginx-proxy
+ADD config/nginx.tmpl /
+
 # Setup Ansible
 ADD ansible/. /ansible
 

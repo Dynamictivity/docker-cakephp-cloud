@@ -20,6 +20,9 @@ composer install --working-dir=/www
 # Copy over app configuration
 cp /app.php /www/config/app.php
 
+# Copy over nginx-proxy template
+cp /nginx.tmpl /www/config/nginx.tmpl
+
 # Wait for MySQL to come up (http://stackoverflow.com/questions/6118948/bash-loop-ping-successful)
 ((count = 100000))                            # Maximum number to try.
 while [[ $count -ne 0 ]] ; do
