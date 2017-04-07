@@ -13,4 +13,4 @@
            - location ~ ^/(index)\.php(/|$) { fastcgi_pass php-upstream; fastcgi_split_path_info ^(.+\.php)(/.*)$; include fastcgi_params; fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; fastcgi_param HTTPS off; }
            - error_log "/www/logs/cakephp_error.log"
            - access_log "/var/log/nginx/cakephp_access.log"
-           - location ~* \.(jpg|jpeg|png|gif|ico|css|js)$ { expires 365d; }
+          #  - location ~* \.(jpg|jpeg|png|gif|ico|css|js)$ { expires 365d; }
