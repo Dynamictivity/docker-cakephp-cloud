@@ -1,4 +1,4 @@
-docker-cakephp-prod
+docker-cakephp-cloud
 ==============
 Just a little Docker POC in order to have a self-contained CakePHP application running in a Docker container using
 docker-compose or docker-cloud tools in a production environment. This image is ready to be scaled out horizonally
