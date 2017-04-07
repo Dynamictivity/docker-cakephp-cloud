@@ -13,6 +13,7 @@ services:
             - "9000"
         volumes:
             - /www
+            - /mnt/docker/cakephp/tmp:/www/tmp
         links:
             - db
         environment:
