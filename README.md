@@ -101,9 +101,67 @@ FROM travisrowland/docker-cakephp-cloud:latest
 # Add source code
 ADD . /source
 
-# Add custom init scropts
+# Add custom init scripts
 #ADD app-init.sh /etc/my_init.d/app-init.sh
 
+```
+
+After you do that, you'll want to setup `docker-compose` using a `docker-compose.yml` similar to the following:
+
+```
+version: '2'
+services:
+    db:
+        image: mariadb:5.5
+        ports:
+            - "3306:3306"
+        environment:
+          MYSQL_ROOT_PASSWORD: 'cakephp'
+          MYSQL_DATABASE: 'cakephp'
+    cakephp:
+        build: .
+        expose:
+            - "9000"
+        volumes:
+            - /www
+            - /mnt/docker/cakephp/logs:/www/logs
+            - /mnt/docker/cakephp/tmp:/www/tmp
+        links:
+            - db
+        environment:
+          DEBUG: 'true'
+          DB_HOST: 'db' # Leave this as 'db' to utilize MySQL container(s)
+          DB_USERNAME: 'root'
+          DB_PASSWORD: 'cakephp'
+          DB_DATABASE: 'cakephp'
+          DB_SEED: 'DatabaseSeed'
+          EMAIL_HOST: 'localhost'
+          EMAIL_PORT: '25'
+          EMAIL_TIMEOUT: '30'
+          EMAIL_USERNAME: 'user'
+          EMAIL_PASSWORD: 'secret'
+          EMAIL_TLS: 'false'
+          SECURITY_SALT: '4F3mzqXRuQ4X9S9sR2d64YV2Ftcfd2KVek678m4K63q35g9z7YT8YwEu4s46A25Y'
+        ports:
+            - "80:80"
+```
+
+Next, build your application:
+
+```bash
+$ docker-compose build
+```
+
+Then, run:
+
+```bash
+$ docker-compose up -d
+```
+
+You can check the status of your running application using the following command:
+
+```bash
+$ docker-compose logs
 ```
 
 ### Method 2: Auto-clone your app to the container
