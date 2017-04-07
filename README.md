@@ -2,7 +2,7 @@ docker-cakephp-cloud
 ==============
 Just a little Docker POC in order to have a self-contained CakePHP application running in a Docker container using
 docker-compose or docker-cloud tools in a production environment. This image is ready to be scaled out horizonally
-on a docker swarm cluster, kubernetes, mesos, etc.
+on a docker swarm cluster, kubernetes, mesos, docker cloud, etc.
 
 ## How it works?
 The docker container contains all necessary libraries, php-processing and proxy tools to run a self-contained CakePHP
