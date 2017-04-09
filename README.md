@@ -33,7 +33,7 @@ e231fff8c78b        0.01%               83.83 MiB / 488.7 MiB   17.16%      vagr
 ```
 
 ## Docker Hub
-This image is available on [Docker Hub](https://hub.docker.com/r/travisrowland/docker-cakephp-cloud/)
+This image is available on [Docker Hub](https://hub.docker.com/r/dynamictivity/docker-cakephp-cloud/)
 
 ## Recommendations
 - It is recommended to utilize this stack with database sessions, so your sessions can be persisted across all running
@@ -100,7 +100,7 @@ You can build your app into the container image by adding a `Dockerfile` similar
 source code repository.
 
 ```
-FROM travisrowland/docker-cakephp-cloud:latest
+FROM dynamictivity/docker-cakephp-cloud:latest
 
 # Add source code
 ADD . /source
