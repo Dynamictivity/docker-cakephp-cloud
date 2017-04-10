@@ -38,7 +38,7 @@ This image is available on [Docker Hub](https://hub.docker.com/r/dynamictivity/d
 ## Recommendations
 - It is recommended to utilize this stack with database sessions, so your sessions can be persisted across all running
     instances of your application.
-- It is also recommended that you mount your `/tmp`, 'logs' and `uploads` directories as Docker volumes in order to
+- It is also recommended that you mount your `/tmp`, `logs` and `uploads` directories as Docker volumes in order to
     share them across all running instances.
 
 ## Contributing
