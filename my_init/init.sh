@@ -17,6 +17,11 @@ fi
 # Install app dependencies
 composer install --working-dir=/www
 
+# Clear app caches
+rm -rf /www/tmp/cache/models/*
+rm -rf /www/tmp/cache/persistent/*
+rm -rf /www/tmp/cache/views/*
+
 # Copy over app configuration
 cp /app.php /www/config/app.php
 
