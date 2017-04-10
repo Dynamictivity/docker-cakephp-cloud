@@ -370,7 +370,7 @@ the recommended docker-compose configuration:
 # Ansible
 Ansible is used inside the docker image to configure NGINX. You may find our custom configuration in
 [ansible/playbook.yml](ansible/playbook.yml)). This is based on another open-source project from Dynamictivity called
-[nginx-ansible](https://gitlab.dynamictivity.com/ansible/nginx-ansible).
+[anginx-ansible](https://gitlab.dynamictivity.com/dynamictivity/nginx-ansible).
 
 This docker container has the ability to pull in a playbook specification from a remote URL and automatically run that
 playbook on container startup. Primarily this is used to configure the in-build nginx server which is running in this
