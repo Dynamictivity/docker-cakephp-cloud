@@ -8,7 +8,7 @@ MAINTAINER Travis Rowland <travis.rowland@gmail.com>
 CMD ["/sbin/my_init"]
 
 # Environment Variables
-ENV DEBIAN_FRONTEND noninteractive
+# ENV DEBIAN_FRONTEND noninteractive
 ENV TIMEZONE            UTC
 ENV PHP_MEMORY_LIMIT    512M
 ENV MAX_UPLOAD          50M
@@ -57,11 +57,11 @@ RUN service php7.0-fpm start
 # Set environment variables
 RUN sed -i '/daemonize /c daemonize = no' /etc/php/7.0/fpm/php-fpm.conf && \
     echo "clear_env = no" >> /etc/php/7.0/fpm/php-fpm.conf && \
-	sed -i '/^listen /c listen = 0.0.0.0:9000' /etc/php/7.0/fpm/pool.d/www.conf && \
-	sed -i 's/^listen.allowed_clients/;listen.allowed_clients/' /etc/php/7.0/fpm/pool.d/www.conf && \
-	sed -i "s|;*listen\s*=\s*/||g" /etc/php/7.0/fpm/pool.d/www.conf && \
-	sed -i "s|;*date.timezone =.*|date.timezone = ${TIMEZONE}|i" /etc/php/7.0/fpm/php.ini && \
-	sed -i "s|;*memory_limit =.*|memory_limit = ${PHP_MEMORY_LIMIT}|i" /etc/php/7.0/fpm/php.ini && \
+  	sed -i '/^listen /c listen = 0.0.0.0:9000' /etc/php/7.0/fpm/pool.d/www.conf && \
+  	sed -i 's/^listen.allowed_clients/;listen.allowed_clients/' /etc/php/7.0/fpm/pool.d/www.conf && \
+  	sed -i "s|;*listen\s*=\s*/||g" /etc/php/7.0/fpm/pool.d/www.conf && \
+  	sed -i "s|;*date.timezone =.*|date.timezone = ${TIMEZONE}|i" /etc/php/7.0/fpm/php.ini && \
+  	sed -i "s|;*memory_limit =.*|memory_limit = ${PHP_MEMORY_LIMIT}|i" /etc/php/7.0/fpm/php.ini && \
     sed -i "s|;*upload_max_filesize =.*|upload_max_filesize = ${MAX_UPLOAD}|i" /etc/php/7.0/fpm/php.ini && \
     sed -i "s|;*max_file_uploads =.*|max_file_uploads = ${PHP_MAX_FILE_UPLOAD}|i" /etc/php/7.0/fpm/php.ini && \
     sed -i "s|;*post_max_size =.*|post_max_size = ${PHP_MAX_POST}|i" /etc/php/7.0/fpm/php.ini && \
