@@ -242,6 +242,12 @@ environment:
   SECURITY_SALT: '4F3mzqXRuQ4X9S9sR2d64YV2Ftcfd2KVek678m4K63q35g9z7YT8YwEu4s46A25Y'
 ```
 
+## Read logs
+You can access Nginx and CakePHP application logs in the following directories on your host machine, provided you use
+the recommended docker-compose configuration:
+
+* `/mnt/docker/cakephp/logs`
+
 # docker-gen nginx-proxy and Let's Encrypt
 This image is setup to work with `docker-gen/nginx-proxy` for easy, automated cluster-based load-balancing. You can
 try out the automated load-balancing functionality using the following `docker-compose.yml`:
@@ -354,18 +360,14 @@ If you want to add automated SSL certificate generation using Let's Encrypt simp
 # Vagrant
 You can also use `vagrant` for testing by typing the following command from the work tree: `vagrant up`
 
-Run the following commands:
+Run the following commands to bring the application up in Vagrant with Docker:
 
 ```bash
+$ vagrant ssh
 $ cd /vagrant
+$ docker-compose build
 $ docker-compose up
 ```
-
-## Read logs
-You can access Nginx and CakePHP application logs in the following directories on your host machine, provided you use
-the recommended docker-compose configuration:
-
-* `/mnt/docker/cakephp/logs`
 
 # Ansible
 Ansible is used inside the docker image to configure NGINX. You may find our custom configuration in
@@ -697,4 +699,3 @@ You are free to use the code in this repository under the terms of the MIT licen
 Author Information
 ------------------
 Travis Rowland
-
