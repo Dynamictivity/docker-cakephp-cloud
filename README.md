@@ -358,11 +358,10 @@ If you want to add automated SSL certificate generation using Let's Encrypt simp
 ```
 
 # Vagrant
-You can also use `vagrant` for testing by typing the following command from the work tree: `vagrant up`
-
-Run the following commands to bring the application up in Vagrant with Docker:
+You can also use `vagrant` for testing by typing the following commands from the work tree:
 
 ```bash
+$ vagrant up
 $ vagrant ssh
 $ cd /vagrant
 $ docker-compose build
