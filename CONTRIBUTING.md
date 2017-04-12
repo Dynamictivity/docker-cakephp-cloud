@@ -4,7 +4,7 @@ Please contribute to this repository if any of the following is true:
 - You have expertise in community development, communication, or education
 - You want open-source to be more collaborative and inclusive
 - You want to help lower the burden to first time contributors
-- You have interest in the docker-cakephp project
+- You have interest in the docker-cakephp-cloud project
 
 # How to contribute
 
@@ -70,8 +70,8 @@ behaviour is not welcome.
 There is a [Mattermost Team](https://mattermost.dynamictivity.com/signup_user_complete/?id=pjksr6h977n4zxxyto3ojp8twa) mattermost.dynamictivity.com, channel `#docker-cakephp`. You're
 welcome to drop in and ask questions, discuss bugs and such.
 
-GitLab issues are the primary way for communicating about specific proposed
-changes to this project.
+GitLab and GitHub issues are the primary way for communicating about specific
+proposed changes to this project.
 
 In both contexts, please follow the conduct guidelines above. Language issues
 are often contentious and we'd like to keep discussion brief, civil and focused
