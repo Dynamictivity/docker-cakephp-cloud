@@ -17,11 +17,6 @@ fi
 # Install app dependencies
 composer install --working-dir=/www
 
-# Clear app caches
-rm -rf /www/tmp/cache/models/*
-rm -rf /www/tmp/cache/persistent/*
-rm -rf /www/tmp/cache/views/*
-
 # Copy over app configuration
 cp /app.php /www/config/app.php
 
@@ -29,7 +24,7 @@ cp /app.php /www/config/app.php
 cp /nginx.tmpl /www/config/nginx.tmpl
 
 # Wait for MySQL to come up (http://stackoverflow.com/questions/6118948/bash-loop-ping-successful)
-((count = 100000))                            # Maximum number to try.
+((count = 1000))                            # Maximum number to try.
 while [[ $count -ne 0 ]] ; do
     nc -v $DB_HOST 3306                      # Try once.
     rc=$?
@@ -53,7 +48,12 @@ if [ -n "$DB_SEED" ] ; then
     cd /www; bin/cake migrations seed --seed $DB_SEED || true
 fi
 
+# Clear app caches
+cd /www; bin/cake cache clear_all
+
+# Ensure proper ephemeral directory permissions
 chmod 777 /www/logs
+chmod 777 /www/tmp
 
 # Start php-fpm
 nohup /usr/sbin/php-fpm7.0 &
