@@ -6,6 +6,12 @@ on a docker swarm cluster, kubernetes, mesos, docker cloud, etc. It also has Ans
 configuration management and free SSL certificate generation. Did I mention it has built-in load-balancing that you don't
 have to think about?
 
+## Inspiration
+This project was inspired by another project that I developed, [docker-cakephp](https://github.com/Dynamictivity/docker-cakephp),
+which was originally based off the code from [docker-symfony](https://github.com/eko/docker-symfony). This new project is a
+complete rewrite of docker-cakephp based on my experiences in using it over the last several months to manage several CakePHP
+projects in Docker.
+
 ## How it works?
 The docker container contains all necessary libraries, php-processing and proxy tools to run a self-contained CakePHP
 application, minus the database.
